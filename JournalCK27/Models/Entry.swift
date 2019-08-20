@@ -9,40 +9,47 @@
 import Foundation
 import CloudKit
 
-class Entry {
+class Entry: CloudKitSyncable {
     
     var title: String
     var body: String
     let timestamp: Date
-    let recordID: CKRecord.ID
     
-    init(title: String, body: String, timestamp: Date = Date(), recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
+    var ckRecord: CKRecord {
+        let record = CKRecord(recordType: Entry.recordType, recordID: self.recordID)
+        record.setValue(self.title, forKey: EntryConstants.titleKey)
+        record.setValue(self.body, forKey: EntryConstants.bodyKey)
+        record.setValue(self.timestamp, forKey: EntryConstants.timestampKey)
+        record.setValue(self.reference, forKey: EntryConstants.referenceKey)
+        return record
+    }
+    static var recordType: CKRecord.RecordType {
+        return EntryConstants.typeKey
+    }
+    var recordID: CKRecord.ID
+    let reference: CKRecord.Reference
+    
+    init(title: String, body: String, timestamp: Date = Date(), recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString), reference: CKRecord.Reference) {
         
         self.title = title
         self.body = body
         self.timestamp = timestamp
         self.recordID = recordID
+        self.reference = reference
     }
     
-    init?(record: CKRecord) {
+    required init?(record: CKRecord) {
         guard let title = record[EntryConstants.titleKey] as? String,
             let body = record[EntryConstants.bodyKey] as? String,
-            let timestamp = record[EntryConstants.timestampKey] as? Date
+            let timestamp = record[EntryConstants.timestampKey] as? Date,
+            let reference = record[EntryConstants.referenceKey] as? CKRecord.Reference
             else { return nil }
         
         self.title = title
         self.body = body
         self.timestamp = timestamp
         self.recordID = record.recordID
-    }
-}
-
-extension CKRecord {
-    convenience init(entry: Entry) {
-        self.init(recordType: EntryConstants.typeKey, recordID: entry.recordID)
-        self.setValue(entry.title, forKey: EntryConstants.titleKey)
-        self.setValue(entry.body, forKey: EntryConstants.bodyKey)
-        self.setValue(entry.timestamp, forKey: EntryConstants.timestampKey)
+        self.reference = reference
     }
 }
 
@@ -57,4 +64,5 @@ struct EntryConstants {
     fileprivate static let titleKey = "title"
     fileprivate static let bodyKey = "body"
     fileprivate static let timestampKey = "timestamp"
+    fileprivate static let referenceKey = "reference"
 }

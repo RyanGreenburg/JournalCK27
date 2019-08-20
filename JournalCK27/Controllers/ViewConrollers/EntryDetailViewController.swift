@@ -10,6 +10,7 @@ import UIKit
 
 class EntryDetailViewController: UIViewController {
     
+    var journal: Journal?
     var entry: Entry?
     
     @IBOutlet weak var titleTextField: UITextField!
@@ -28,15 +29,27 @@ class EntryDetailViewController: UIViewController {
             let body = bodyTextView.text, !body.isEmpty
             else { return }
         if let entry = entry {
-            EntryController.shared.update(entry: entry, withTitle: title, body: body)
-        } else {
-            EntryController.shared.createEntryWith(title: title, body: body)
+            EntryController.shared.update(entry: entry, withTitle: title, body: body) { (success) in
+                if success {
+                    self.popView()
+                }
+            }
+        } else if let journal = journal {
+            EntryController.shared.createEntryWith(title: title, body: body, inJournal: journal) { (success) in
+                if success {
+                    self.popView()
+                }
+            }
         }
-        self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func clearButtonTapped(_ sender: Any) {
         bodyTextView.text = ""
     }
     
+    func popView() {
+        DispatchQueue.main.async {
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
 }

@@ -13,69 +13,74 @@ class EntryController {
     
     static let shared = EntryController()
     
-    let entriesWereUpdatedNotification = Notification.Name("entriesWereUpdated")
-    
-    var entries: [Entry] = [] {
-        didSet {
-            NotificationCenter.default.post(name: entriesWereUpdatedNotification, object: nil)
-        }
-    }
-    
     // MARK: - CRUD
     // Create
-    func createEntryWith(title: String, body: String) {
-        let newEntry = Entry(title: title, body: body)
-        let record = CKRecord(entry: newEntry)
-        let database = CloudKitController.shared.privateDB
+    func createEntryWith(title: String, body: String, inJournal journal: Journal, completion: @escaping (Bool) -> Void) {
+        let reference = CKRecord.Reference(recordID: journal.recordID, action: .deleteSelf)
+        let newEntry = Entry(title: title, body: body, reference: reference)
         
-        CloudKitController.shared.save(record: record, database: database) { (success) in
-            if success {
-                self.entries.append(newEntry)
+        CloudKitManager.shared.save(object: newEntry) { (result: Result<Entry, Error>) in
+            switch result {
+            case .failure:
+                print("Failed to save Entry to CloudKit")
+                completion(false)
+            case .success:
+                journal.entries.append(newEntry)
+                completion(true)
             }
         }
     }
     
     // Read
-    func fetchEntries(completion: @escaping (Bool) -> Void) {
-        let type = EntryConstants.typeKey
-        let database = CloudKitController.shared.privateDB
-        CloudKitController.shared.fetchRecordsOf(type: type, database: database) { (records, error) in
-            if let error = error {
-                print("Error in \(#function) : \(error.localizedDescription) /n---/n \(error)")
-                completion(false)
+    func fetchEntries(forJournal journal: Journal, completion: @escaping ([Entry]?) -> Void) {
+        
+        let predicate = NSPredicate(format: "%K == %@", argumentArray: [JournalStrings.referenceKey, journal.recordID])
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
+        
+        CloudKitManager.shared.performFetch(predicate: compoundPredicate) { (result: Result<[Entry]?, Error>) in
+            if case .failure(let error) = result {
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                completion(nil)
+                return
             }
             
-            guard let records = records else { return }
-            let entries = records.compactMap( {Entry(record: $0)} )
-            self.entries = entries
-            completion(true)
+            if case .success(let entries) = result {
+                completion(entries)
+                return
+            }
         }
     }
     
     // Update
-    func update(entry: Entry, withTitle title: String, body: String) {
+    func update(entry: Entry, withTitle title: String, body: String, completion: @escaping (Bool) -> Void) {
         entry.title = title
         entry.body = body
         
-        let recordToSave = CKRecord(entry: entry)
-        let database = CloudKitController.shared.privateDB
-        
-        CloudKitController.shared.update(record: recordToSave, database: database) { (success) in
-            if success {
-                print("Updated entry successfully")
+        CloudKitManager.shared.update(entry) { (result: Result<Entry, Error>) in
+            switch result {
+            case .failure:
+                print("Failed to update the entry")
+                completion(false)
+            case .success:
+                completion(true)
             }
         }
     }
     
     // Delete
-    func delete(entry: Entry, completion: @escaping (Bool) -> Void) {
-        guard let index = entries.firstIndex(of: entry) else { return }
-        entries.remove(at: index)
+    func delete(entry: Entry, fromJournal journal: Journal, completion: @escaping (Bool) -> Void) {
+        guard let index = journal.entries.firstIndex(of: entry) else { return }
+        journal.entries.remove(at: index)
         
-        let database = CloudKitController.shared.privateDB
-        
-        CloudKitController.shared.delete(recordID: entry.recordID, database: database) { (success) in
-            completion(success ? true : false)
+        CloudKitManager.shared.delete(entry) { (result) in
+            switch result {
+            case .failure:
+                print("Failed to delete entry")
+                completion(false)
+            case .success:
+                print("Deleted entry successfully")
+                completion(true)
+            }
         }
     }
 }

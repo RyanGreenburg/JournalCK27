@@ -7,12 +7,48 @@
 //
 
 import UIKit
+import CloudKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    /// Need this to accept share and init new object from the metadata
+    func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
+        
+        let acceptSharesOperation = CKAcceptSharesOperation(shareMetadatas: [cloudKitShareMetadata])
+        acceptSharesOperation.qualityOfService = .userInteractive
+        acceptSharesOperation.perShareCompletionBlock = { metadata, share, error in
+            if let error = error {
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return
+            }
+            print("Share was accepted")
+        }
+        
+        acceptSharesOperation.acceptSharesCompletionBlock = { error in
+            if let error = error {
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return
+            }
+            
+            CloudKitManager.shared.fetchShare(metadata: cloudKitShareMetadata, completion: { (result: Result<[Journal]?, Error>) in
+                if case .failure(let error) = result {
+                    print("Could not retrieve Share from CloudKit : \(error)")
+                    return
+                }
+                
+                if case .success(let journals) = result {
+                    guard let journals = journals else { return }
+                    print("Fetched Share successfully")
+                    JournalController.shared.journals.append(contentsOf: journals)
+                    return
+                }
+            })
+        }
+        CKContainer(identifier: cloudKitShareMetadata.containerIdentifier).add(acceptSharesOperation)
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.

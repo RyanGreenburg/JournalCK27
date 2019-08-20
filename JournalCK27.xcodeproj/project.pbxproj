@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6206A3BE2305A400005E1222 /* Journal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6206A3BD2305A400005E1222 /* Journal.swift */; };
+		6206A3C02305B094005E1222 /* JournalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6206A3BF2305B094005E1222 /* JournalController.swift */; };
+		6206A3C22305EEA6005E1222 /* JournalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6206A3C12305EEA6005E1222 /* JournalsViewController.swift */; };
 		6229223722D4F2C90086582E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6229223622D4F2C90086582E /* AppDelegate.swift */; };
 		6229223C22D4F2C90086582E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6229223A22D4F2C90086582E /* Main.storyboard */; };
 		6229223E22D4F2CA0086582E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6229223D22D4F2CA0086582E /* Assets.xcassets */; };
@@ -18,9 +21,15 @@
 		6246D2F822D5024500EA5770 /* EntryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6246D2F722D5024500EA5770 /* EntryDetailViewController.swift */; };
 		6246D2FA22D5036500EA5770 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6246D2F922D5036500EA5770 /* DateExtension.swift */; };
 		6246D2FD22D506ED00EA5770 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6246D2FC22D506ED00EA5770 /* CloudKit.framework */; };
+		6246D2FF22D5391A00EA5770 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6246D2FE22D5391A00EA5770 /* User.swift */; };
+		6246D30122D53E9500EA5770 /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6246D30022D53E9500EA5770 /* UserController.swift */; };
+		6246D30322D54C3300EA5770 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6246D30222D54C3300EA5770 /* SignInViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6206A3BD2305A400005E1222 /* Journal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Journal.swift; sourceTree = "<group>"; };
+		6206A3BF2305B094005E1222 /* JournalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalController.swift; sourceTree = "<group>"; };
+		6206A3C12305EEA6005E1222 /* JournalsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalsViewController.swift; sourceTree = "<group>"; };
 		6229223322D4F2C90086582E /* JournalCK27.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JournalCK27.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6229223622D4F2C90086582E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6229223B22D4F2C90086582E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -35,6 +44,9 @@
 		6246D2F722D5024500EA5770 /* EntryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryDetailViewController.swift; sourceTree = "<group>"; };
 		6246D2F922D5036500EA5770 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		6246D2FC22D506ED00EA5770 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		6246D2FE22D5391A00EA5770 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		6246D30022D53E9500EA5770 /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserController.swift; sourceTree = "<group>"; };
+		6246D30222D54C3300EA5770 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +112,8 @@
 		6246D2EC22D4F36D00EA5770 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				6246D2FE22D5391A00EA5770 /* User.swift */,
+				6206A3BD2305A400005E1222 /* Journal.swift */,
 				6246D2EA22D4F36700EA5770 /* Entry.swift */,
 			);
 			path = Models;
@@ -118,6 +132,8 @@
 		6246D2F022D4F63700EA5770 /* Model Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				6246D30022D53E9500EA5770 /* UserController.swift */,
+				6206A3BF2305B094005E1222 /* JournalController.swift */,
 				6246D2ED22D4F62400EA5770 /* EntryController.swift */,
 			);
 			path = "Model Controllers";
@@ -137,6 +153,8 @@
 			children = (
 				6246D2F422D5007400EA5770 /* EntriesTableViewController.swift */,
 				6246D2F722D5024500EA5770 /* EntryDetailViewController.swift */,
+				6246D30222D54C3300EA5770 /* SignInViewController.swift */,
+				6206A3C12305EEA6005E1222 /* JournalsViewController.swift */,
 			);
 			path = ViewConrollers;
 			sourceTree = "<group>";
@@ -228,12 +246,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6246D30122D53E9500EA5770 /* UserController.swift in Sources */,
+				6206A3C02305B094005E1222 /* JournalController.swift in Sources */,
 				6246D2EE22D4F62400EA5770 /* EntryController.swift in Sources */,
 				6246D2FA22D5036500EA5770 /* DateExtension.swift in Sources */,
 				6246D2EB22D4F36700EA5770 /* Entry.swift in Sources */,
+				6206A3C22305EEA6005E1222 /* JournalsViewController.swift in Sources */,
 				6246D2F222D4F6B600EA5770 /* CloudKitController.swift in Sources */,
+				6246D2FF22D5391A00EA5770 /* User.swift in Sources */,
 				6229223722D4F2C90086582E /* AppDelegate.swift in Sources */,
+				6206A3BE2305A400005E1222 /* Journal.swift in Sources */,
 				6246D2F822D5024500EA5770 /* EntryDetailViewController.swift in Sources */,
+				6246D30322D54C3300EA5770 /* SignInViewController.swift in Sources */,
 				6246D2F522D5007400EA5770 /* EntriesTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
